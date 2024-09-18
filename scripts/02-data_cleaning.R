@@ -1,44 +1,37 @@
 #### Preamble ####
-# Purpose: Cleans the raw plane data recorded by two observers..... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 6 April 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Purpose: Cleans and prepares the Motor Vehicle Collisions statistics data for analysis.
+#          This script focuses on data downloaded from the OpenDataToronto portal, ensuring 
+#          it's in the correct format and ready for further statistical analysis or visualization.
+# Author: Jiwon Choi
+# Date: 18 September 2024
+# Contact: jwon.choi@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
+# Pre-requisites: 01-download_data.R
 
 #### Workspace setup ####
 library(tidyverse)
+library(tidyr)
+library(janitor)
 
 #### Clean data ####
-raw_data <- read_csv("inputs/data/plane_data.csv")
+raw_data <- read_csv("data/raw_data/raw_data.csv")
 
+# Apply clean_names and select necessary columns
 cleaned_data <-
   raw_data |>
   janitor::clean_names() |>
-  select(wing_width_mm, wing_length_mm, flying_time_sec_first_timer) |>
-  filter(wing_width_mm != "caw") |>
-  mutate(
-    flying_time_sec_first_timer = if_else(flying_time_sec_first_timer == "1,35",
-                                   "1.35",
-                                   flying_time_sec_first_timer)
-  ) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "490",
-                                 "49",
-                                 wing_width_mm)) |>
-  mutate(wing_width_mm = if_else(wing_width_mm == "6",
-                                 "60",
-                                 wing_width_mm)) |>
-  mutate(
-    wing_width_mm = as.numeric(wing_width_mm),
-    wing_length_mm = as.numeric(wing_length_mm),
-    flying_time_sec_first_timer = as.numeric(flying_time_sec_first_timer)
-  ) |>
-  rename(flying_time = flying_time_sec_first_timer,
-         width = wing_width_mm,
-         length = wing_length_mm
-         ) |> 
+  select(traffctl, visibility, light, rdsfcond, acclass, injury, drivcond, speeding, ag_driv, alcohol, disability) |>
   tidyr::drop_na()
 
+# Rename multiple columns to understand more easily by the name
+cleaned_data <- cleaned_data |>
+  rename(
+    traffic_control_type = traffctl,
+    road_surface_condition = rdsfcond,
+    classification_of_accident = acclass,
+    driver_condition = drivcond,
+    aggressive_and_disturbed_driving = ag_driv
+  )
+
 #### Save data ####
-write_csv(cleaned_data, "outputs/data/analysis_data.csv")
+write_csv(cleaned_data, "data/analysis_data/analysis_data.csv")
