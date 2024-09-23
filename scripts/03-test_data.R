@@ -73,4 +73,12 @@ test_results$test_10 <- all(unique(finalized_accident_data$alcohol) %in% expecte
 expected_disability <- c("None", "Yes")
 test_results$test_11 <- all(unique(finalized_accident_data$disability) %in% expected_disability)
 
+# Test 12: 'date' format
+# Check if the 'date' column is in the correct format 'YYYY-MM-DD'
+is_valid_date <- function(date_column) {
+  all(!is.na(as.Date(date_column, format = "%Y-%m-%d")))
+}
+
+test_results$test_12 <- is_valid_date(finalized_accident_data$date)
+
 print(test_results)
