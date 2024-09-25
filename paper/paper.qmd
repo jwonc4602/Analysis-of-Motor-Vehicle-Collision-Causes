@@ -2,9 +2,8 @@
 title: "My title"
 subtitle: "My subtitle if needed"
 author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+  - Jiwon Choi
+thanks: "Code and data are available at: https://github.com/jwonc4602/Analysis-of-Motor-Vehicle-Collision-Causes."
 date: today
 date-format: long
 abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
@@ -18,8 +17,34 @@ bibliography: references.bib
 #| warning: false
 #| message: false
 
+#### Workspace set-up ####
+
+## Load packages
 library(tidyverse)
-library(palmerpenguins)
+library(knitr)
+library(here)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(gridExtra)
+library(grid)
+
+#read in cleaned data #
+#total_cleaned_data
+cleaned_data <- read.csv(here::here("data/analysis_data/total_cleaned_data.csv"))
+show_col_types = FALSE
+
+# human factors data
+human_factors_data <- read.csv(here::here("data/analysis_data/human_factors_data.csv"))
+show_col_types = FALSE
+
+# environmental factors data
+environmental_factors_data <- read.csv(here::here("data/analysis_data/environmental_factors_data.csv"))
+show_col_types = FALSE
+
+# result data
+result_data <- read.csv(here::here("data/analysis_data/result_data.csv"))
+show_col_types = FALSE
 ```
 
 
@@ -33,110 +58,275 @@ The remainder of this paper is structured as follows. @sec-data....
 
 # Data {#sec-data}
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+## Data Source
+
+This research is based on a dataset published by Toronto Police Services, which is accessible through the City of Toronto’s OpenDataToronto Library [@rOpenDataToronto]. The specific dataset includes all traffic collisions events in Toronto where a person was either Killed or Seriously Injured (KSI) since 2006.
+
+## Data Collection
+
+The methodology for gathering data is structured to ensure a detailed and current perspective of shelter and overnight service. The data was compiled and examined using the R statistical programming software [@r], supplemented by various tools such as `tidyverse` [@rTidyverse], `ggplot2` [@rGgplot2], `dplyr` [@rDplyr], `readr` [@rReadr], `tibble` [@rTibble], `janitor` [@rJanitor], `knitr` [@rknitr], and `here` [@rHere].
+
+This traffic accident data consists of 18,957 entries from a citywide accident survey, capturing detailed information about various factors involved in traffic incidents. The raw dataset includes 50 variables, ranging from geographic data, such as the street where the accident occurred, to behavioral data, such as driver condition and alcohol involvement. This dataset records accidents over multiple years and provides insights into environmental conditions, road types, and the actions of drivers and pedestrians at the time of the incidents. The goal of this dataset is to provide a comprehensive view of traffic accidents for research and policy analysis related to urban traffic safety and accident prevention.
+
+The cleaned data is divided into three datasets, and the first one focuses on human factors related to traffic collisions, specifically the behaviors and conditions of drivers that may have contributed to accidents. The four main categories—'speeding', 'aggressive_and_disturbed_driving', 'alcohol', and 'disability'—were selected because these are well-known, critical factors that significantly increase the risk of traffic accidents. Each factor is evaluated as either "None" or "Yes", indicating the absence or presence of that factor in the collision. These categories were chosen because they represent preventable human actions or conditions that are highly correlated with the likelihood and severity of traffic incidents. (see @tbl-cleaned-human-factors-data)
+
+1. **speeding**: Refers to collisions where speeding was a contributing factor. Speeding reduces a driver's ability to react quickly to road conditions or obstacles, and it increases the severity of crashes when they occur, making it one of the primary causes of traffic collisions.
+
+2. **aggressive_and_disturbed_driving**: This category examines whether aggressive behavior, such as reckless driving, or distracted driving (like texting or talking on the phone) was involved in the collision. Aggressive and distracted driving are known to impair judgment and reaction time, leading to accidents that could otherwise have been avoided.
+
+3. **alcohol**: Evaluates if alcohol was a factor in the collision. Alcohol impairs motor skills and decision-making, and is a well-documented contributor to severe and fatal traffic accidents. This category is crucial for understanding the role of substance use in driver behavior.
+
+4. **disability**: Assesses if any medical or physical disability played a role in the collision. Disabilities, whether temporary or permanent, can affect a driver's ability to control the vehicle or respond to changing road conditions, making this an important factor to consider in the context of traffic safety.
+
+These categories were selected because they represent key human factors that have a direct impact on traffic safety, and addressing them can help reduce both the frequency and severity of accidents.
 
 ```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
-
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
-
-Talk more about it.
-
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
 #| message: false
+#| echo: false
+#| label: fig-frequency-factors-tall
+#| fig-cap: Frequency of human factors with thinner numbers and taller graph
 
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
+# Convert relevant columns to factors and reorder them for better readability
+human_factors_data <- human_factors_data %>%
+  mutate(speeding = factor(speeding, levels = c("None", "Yes")),
+         aggressive_and_disturbed_driving = factor(aggressive_and_disturbed_driving, levels = c("None", "Yes")),
+         alcohol = factor(alcohol, levels = c("None", "Yes")),
+         disability = factor(disability, levels = c("None", "Yes")))
 
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
+# Frequency summary for each factor
+factor_summary <- human_factors_data %>%
+  summarise(
+    speeding = sum(speeding == "Yes"),
+    aggressive_and_disturbed_driving = sum(aggressive_and_disturbed_driving == "Yes"),
+    alcohol = sum(alcohol == "Yes"),
+    disability = sum(disability == "Yes")
+  ) %>%
+  tidyr::gather(key = "factor", value = "count")
+
+# Split the category name for 'aggressive_and_disturbed_driving'
+factor_summary <- factor_summary %>%
+  mutate(factor = str_replace_all(factor, "aggressive_and_disturbed_driving", "aggressive\nand disturbed driving"))
+
+# Reorder factors based on count for better visualization
+factor_summary <- factor_summary %>%
+  mutate(factor = forcats::fct_reorder(factor, count, .desc = TRUE))
+
+# Bar plot with thinner numbers and taller graph
+ggplot(factor_summary, aes(x = factor, y = count, fill = factor)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = count), vjust = -0.5, nudge_y = 200, size = 3, fontface = "plain", color = "black") +  # Thinner numbers
   theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
+  labs(title = "Frequency of Human Factors in Traffic Collisions",
+       x = "Human Factors",
+       y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Adjust x-axis labels
+  coord_cartesian(ylim = c(0, 11000))  # Adjust the y-axis limit to make the graph taller
+
 ```
 
-Talk way more about it. 
-
-
-
-# Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
-
-Our results are summarized in @tbl-modelresults.
-
 ```{r}
-#| echo: false
-#| eval: true
-#| warning: false
 #| message: false
+#| echo: false
+#| label: fig-trend-over-time
+#| fig-cap: Trends of human factors in traffic collisions over time
 
-library(rstanarm)
+# Convert the date column to date format
+human_factors_data <- human_factors_data %>%
+  mutate(date = as.Date(date, format = "%Y-%m-%d"))
 
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
+# Summarise the presence of each factor by year
+trend_data <- human_factors_data %>%
+  mutate(year = lubridate::year(date)) %>%
+  group_by(year) %>%
+  summarise(
+    speeding = sum(speeding == "Yes"),
+    aggressive_and_disturbed_driving = sum(aggressive_and_disturbed_driving == "Yes"),
+    alcohol = sum(alcohol == "Yes"),
+    disability = sum(disability == "Yes")
+  ) %>%
+  tidyr::gather(key = "factor", value = "count", -year)
+
+# Line plot to show trends over time
+ggplot(trend_data, aes(x = year, y = count, color = factor)) +
+  geom_line(linewidth = 0.8) +
+  theme_minimal() +
+  labs(title = "Trends in Human Factors Over Time",
+       x = "Year",
+       y = "Count of Collisions",
+       color = "Human Factor")
+```
+
+
+
+The second dataset focuses on the environmental factors of traffic collisions, capturing the conditions that surround and influence accidents. These factors play a critical role in how drivers respond to the road and other vehicles, and they can either increase or mitigate the risk of collisions. The selected categories—'traffic_control_type', 'visibility', 'light', and 'road_surface_condition'—were chosen because they reflect the external conditions that can directly affect driver behavior and vehicle performance during a collision. Each category contributes to understanding the environment in which the collision occurred and highlights preventable factors or areas for safety improvement. (see @tbl-cleaned-environmental-factors-data)
+
+1. **traffic_control_type**: This category identifies the type of traffic control present at the scene, such as "Stop Sign," "Traffic Signal," "Pedestrian Crossover," or "No Control." These labels were chosen because the presence and type of traffic control significantly influence driver decisions. Proper traffic control can prevent accidents, while its absence or failure can lead to dangerous situations.
+
+2. **visibility**: This category describes the environmental visibility conditions at the time of the collision, such as "Clear," "Fog, Mist, Smoke, Dust," "Rain," or "Drifting Snow." Visibility is critical for a driver’s ability to react to road hazards or changes. Poor visibility, whether caused by weather or other environmental factors, can lead to misjudgments or delays in reaction time, making it an important factor to analyze in traffic collisions.
+
+3. **Light**: This refers to the lighting conditions at the time of the collision, with possibilities such as "Daylight," "Dusk," "Dark," or artificial lighting conditions like "Dark, artificial" or "Dusk, artificial." Lighting impacts how well a driver can see the road, pedestrians, and other vehicles. Dim or changing light conditions can impair a driver’s perception, increasing the likelihood of an accident, which is why this category is crucial for safety assessments.
+
+4. **road_surface_condition**: This captures the state of the road surface, including conditions like "Dry," "Wet," "Loose Snow," "Ice," or "Slush." The condition of the road surface affects the vehicle’s traction and stability, making it one of the key determinants of how well a driver can maintain control of their vehicle. Poor road surface conditions, such as ice or wet roads, are a known cause of accidents and were chosen for their direct impact on vehicle performance.
+
+These categories were selected because they represent the most critical environmental factors that influence traffic safety. Understanding and addressing these factors can improve road designs, traffic control systems, and driver awareness, ultimately reducing collision rates.
+
+```{r}
+#| message: false
+#| echo: false
+#| label: tbl-cleaned-environmental-factors-data
+#| tbl-cap: Sample of Environmental Factors of Collision Data
+
+head (environmental_factors_data, 5) |>
+  kable(
+    col.names = c("date", "traffic_control_type", "visibility", "light", "road_surface_condition"),
+  booktabs = TRUE
+  )
 ```
 
 ```{r}
+#| message: false
 #| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
+#| label: fig-four-graphs-layout
+#| fig-cap: Combined layout with four simplified collision graphs
 
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+# Modify traffic_control_type to group categories into 'No Control', 'Stop Sign', 'Traffic Signal', and 'Others'
+environmental_factors_data <- environmental_factors_data %>%
+  mutate(traffic_control_type_grouped = case_when(
+    traffic_control_type == "No Control" ~ "No Control",
+    traffic_control_type == "Stop Sign" ~ "Stop Sign",
+    traffic_control_type == "Traffic Signal" ~ "Traffic Signal",
+    TRUE ~ "Others"
+  ))
+
+# Modify visibility to group categories into 'Clear', 'Rain', 'Snow', and 'Others'
+environmental_factors_data <- environmental_factors_data %>%
+  mutate(visibility_grouped = case_when(
+    visibility == "Clear" ~ "Clear",
+    visibility == "Rain" ~ "Rain",
+    visibility == "Snow" ~ "Snow",
+    TRUE ~ "Others"
+  ))
+
+# Common theme
+common_theme <- theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),  # Slightly larger font for clarity
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    plot.title = element_text(size = 10),
+    plot.margin = margin(t = 15, r = 15, b = 15, l = 15)  # Margins for more space
+  )
+
+# First plot: Traffic Control Type and Visibility Conditions
+
+# Plot 1: Traffic Control Type
+plot1 <- ggplot(environmental_factors_data, aes(x = traffic_control_type_grouped)) +
+  geom_bar(fill = "steelblue") +
+  geom_text(stat = 'count', aes(label = after_stat(count)), vjust = -0.5, size = 3) +
+  common_theme +
+  labs(title = "Collisions by Traffic Control Type",
+       x = "Traffic Control Type",
+       y = "Number of Collisions") +
+  coord_cartesian(ylim = c(0, max(table(environmental_factors_data$traffic_control_type_grouped)) * 1.2))
+
+# Plot 2: Visibility Conditions
+plot2 <- ggplot(environmental_factors_data, aes(x = visibility_grouped)) +
+  geom_bar(fill = "steelblue") +
+  geom_text(stat = 'count', aes(label = after_stat(count)), vjust = -0.5, size = 3) +
+  common_theme +
+  labs(title = "Collisions by Visibility Conditions",
+       x = "Visibility",
+       y = "Number of Collisions") +
+  coord_cartesian(ylim = c(0, max(table(environmental_factors_data$visibility_grouped)) * 1.2))
+
+# Arrange these two plots side by side
+first_plot_pair <- grid.arrange(plot1, plot2, ncol = 2, 
+                                top = textGrob("Environmental Factors Affecting Collisions", gp = gpar(fontsize = 15, fontface = "bold")))
+
 ```
 
+```{r}
+#| message: false
+#| echo: false
+#| label: tbl-cleaned-environmental-factors-data-2
+#| tbl-cap: Sample of Environmental Factors of Collision Data 2
 
+# Common theme
+common_theme <- theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.title.x = element_text(size = 10),
+    axis.title.y = element_text(size = 10),
+    plot.title = element_text(size = 10),  # No bold here
+    plot.margin = margin(t = 15, r = 15, b = 15, l = 15)  # Margins for more space
+  )
 
+# Modify light to group categories into 'Dark', 'Dawn', 'Daylight', 'Dusk', and 'Others'
+environmental_factors_data <- environmental_factors_data %>%
+  mutate(lighting_grouped = case_when(
+    light %in% c("Dark", "Dark, artificial") ~ "Dark",
+    light %in% c("Dawn", "Dawn, artificial") ~ "Dawn",
+    light %in% c("Daylight", "Daylight, artificial") ~ "Daylight",
+    light %in% c("Dusk", "Dusk, artificial") ~ "Dusk",
+    light %in% c("None", "Other") ~ "Others"
+  ))
+
+# Modify road_surface_condition to group categories into 'Dry', 'Wet', and 'Other'
+environmental_factors_data <- environmental_factors_data %>%
+  mutate(road_surface_grouped = case_when(
+    road_surface_condition == "Dry" ~ "Dry",
+    road_surface_condition == "Wet" ~ "Wet",
+    TRUE ~ "Other"
+  ))
+
+# Second plot: Lighting Conditions and Road Surface Condition
+
+# Plot 3: Lighting Conditions
+plot3 <- ggplot(environmental_factors_data, aes(x = lighting_grouped)) +
+  geom_bar(fill = "steelblue") +
+  geom_text(stat = 'count', aes(label = after_stat(count)), vjust = -0.5, size = 3) +
+  common_theme +  # Apply the common theme
+  labs(title = "Collisions by Lighting Conditions",
+       x = "Lighting Conditions",
+       y = "Collisions") +
+  coord_cartesian(ylim = c(0, max(table(environmental_factors_data$lighting_grouped)) * 1.2))
+
+# Plot 4: Road Surface Conditions
+plot4 <- ggplot(environmental_factors_data, aes(x = road_surface_grouped)) +
+  geom_bar(fill = "steelblue") +
+  geom_text(stat = 'count', aes(label = after_stat(count)), vjust = -0.5, size = 3) +
+  common_theme +  # Apply the common theme
+  labs(title = "Collisions by Road Surface Condition",
+       x = "Road Surface Condition",
+       y = "Collisions") +
+  coord_cartesian(ylim = c(0, max(table(environmental_factors_data$road_surface_grouped)) * 1.2))
+
+# Arrange these two plots side by side
+second_plot_pair <- grid.arrange(plot3, plot4, ncol = 2, 
+                                 top = textGrob("Environmental Factors Affecting Collisions: Part 2", gp = gpar(fontsize = 15, fontface = "bold")))
+
+```
+
+The last dataset focuses on the result data, specifically analyzing the outcomes of traffic collisions in terms of the 'classification_of_accident' and the 'injury'. These categories were selected because they offer essential insights into the real-world consequences of traffic accidents, both in terms of human harm and material damage. By understanding the outcomes, safety measures and interventions can be better designed to prevent severe accidents in the future. (see @tbl-cleaned-result-data)
+
+1. **classification_of_accident**: This category outlines the type of accident that occurred, with classifications such as "Fatal," "Non-Fatal Injury," "None," and "Property Damage Only." These labels were selected because they provide a clear and structured way to assess the severity of the collision. This classification helps to categorize accidents based on their impact, whether they resulted in fatalities, injuries, or just property damage. By understanding the distribution of these classifications, authorities can prioritize safety interventions to reduce fatal or injury-related accidents.
+
+2. **injury**: This category refers to the level of injury sustained in the accident, with possible values including "Fatal," "Major," "Minor," "Minimal," and "None." Injury severity is a key indicator of the human toll of traffic collisions. These specific levels were selected because they cover the full spectrum of injury outcomes, from minor incidents to fatal accidents. This allows for a detailed understanding of the physical impact on those involved in the accidents, facilitating better emergency response planning and public health interventions.
+
+These categories were chosen because they provide crucial information on the aftermath of traffic collisions, helping to identify patterns in accident severity and injury. Understanding these outcomes is vital for designing targeted measures to reduce the occurrence and impact of serious traffic accidents.
+
+```{r}
+#| message: false
+#| echo: false
+#| label: tbl-cleaned-result-data
+#| tbl-cap: Sample of Result of Collision Data
+
+head (result_data, 5) |>
+  kable(
+    col.names = c("date", "classification_of_accident", "injury"),
+  booktabs = TRUE
+  )
+```
 
 # Discussion
 
@@ -151,67 +341,6 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 ## Weaknesses and next steps
 
 Weaknesses and next steps should also be included.
-
-\newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
-```
-
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
-
-
 
 \newpage
 
