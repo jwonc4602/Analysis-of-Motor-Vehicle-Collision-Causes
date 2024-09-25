@@ -20,7 +20,7 @@ raw_data <- read_csv("data/raw_data/raw_data.csv")
 cleaned_data <-
   raw_data |>
   janitor::clean_names() |>
-  select(date, traffctl, visibility, light, rdsfcond, acclass, injury, drivcond, speeding, ag_driv, alcohol, disability) |>
+  select(date, traffctl, visibility, light, rdsfcond, acclass, injury, speeding, ag_driv, alcohol, disability) |>
   tidyr::drop_na()
 
 # Rename multiple columns to understand more easily by the name
@@ -29,10 +29,33 @@ cleaned_data <- cleaned_data |>
     traffic_control_type = traffctl,
     road_surface_condition = rdsfcond,
     classification_of_accident = acclass,
-    driver_condition = drivcond,
     aggressive_and_disturbed_driving = ag_driv
   )
 
+# human factors
+human_factors_data <-
+  cleaned_data |>
+  janitor::clean_names() |>
+  select(date, speeding, aggressive_and_disturbed_driving, alcohol, disability) |>
+  tidyr::drop_na()
+
+# environmental factors
+environmental_factors_data <-
+  cleaned_data |>
+  janitor::clean_names() |>
+  select(date, traffic_control_type, visibility, light, road_surface_condition) |>
+  tidyr::drop_na()
+
+# result data
+result_data <-
+  cleaned_data |>
+  janitor::clean_names() |>
+  select(date, classification_of_accident, injury) |>
+  tidyr::drop_na()
+
 #### Save data ####
-write_csv(cleaned_data, "data/analysis_data/analysis_data.csv")
+write_csv(cleaned_data, "data/analysis_data/total_cleaned_data.csv")
+write_csv(human_factors_data, "data/analysis_data/human_factors_data.csv")
+write_csv(environmental_factors_data, "data/analysis_data/environmental_factors_data.csv")
+write_csv(result_data, "data/analysis_data/result_data.csv")
 
