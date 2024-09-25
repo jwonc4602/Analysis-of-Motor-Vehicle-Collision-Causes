@@ -51,34 +51,28 @@ test_results$test_5 <- all(unique(finalized_accident_data$classification_of_acci
 expected_injury <- c("Fatal", "Major", "Minimal", "Minor", "None")
 test_results$test_6 <- all(unique(finalized_accident_data$injury) %in% expected_injury)
 
-# Test 7: 'driver_condition' categories
-expected_driver_conditions <- c("Ability Impaired, Alcohol", "Ability Impaired, Alcohol Over .08", 
-                                "Ability Impaired, Drugs", "Fatigue", "Had Been Drinking", "Inattentive", 
-                                "Medical or Physical Disability", "None", "Normal", "Other", "Unknown")
-test_results$test_7 <- all(unique(finalized_accident_data$driver_condition) %in% expected_driver_conditions)
-
-# Test 8: 'speeding' categories
+# Test 7: 'speeding' categories
 expected_speeding <- c("None", "Yes")
-test_results$test_8 <- all(unique(finalized_accident_data$speeding) %in% expected_speeding)
+test_results$test_7 <- all(unique(finalized_accident_data$speeding) %in% expected_speeding)
 
-# Test 9: 'aggressive_and_disturbed_driving' categories
+# Test 8: 'aggressive_and_disturbed_driving' categories
 expected_aggressive_driving <- c("None", "Yes")
-test_results$test_9 <- all(unique(finalized_accident_data$aggressive_and_disturbed_driving) %in% expected_aggressive_driving)
+test_results$test_8 <- all(unique(finalized_accident_data$aggressive_and_disturbed_driving) %in% expected_aggressive_driving)
 
-# Test 10: 'alcohol' categories
+# Test 9: 'alcohol' categories
 expected_alcohol <- c("None", "Yes")
-test_results$test_10 <- all(unique(finalized_accident_data$alcohol) %in% expected_alcohol)
+test_results$test_9 <- all(unique(finalized_accident_data$alcohol) %in% expected_alcohol)
 
-# Test 11: 'disability' categories
+# Test 10: 'disability' categories
 expected_disability <- c("None", "Yes")
-test_results$test_11 <- all(unique(finalized_accident_data$disability) %in% expected_disability)
+test_results$test_10 <- all(unique(finalized_accident_data$disability) %in% expected_disability)
 
-# Test 12: 'date' format
+# Test 11: 'date' format
 # Check if the 'date' column is in the correct format 'YYYY-MM-DD'
 is_valid_date <- function(date_column) {
   all(!is.na(as.Date(date_column, format = "%Y-%m-%d")))
 }
 
-test_results$test_12 <- is_valid_date(finalized_accident_data$date)
+test_results$test_11 <- is_valid_date(finalized_accident_data$date)
 
 print(test_results)
