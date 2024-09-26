@@ -20,42 +20,62 @@ raw_data <- read_csv("data/raw_data/raw_data.csv")
 cleaned_data <-
   raw_data |>
   janitor::clean_names() |>
-  select(date, traffctl, visibility, light, rdsfcond, acclass, injury, speeding, ag_driv, alcohol, disability) |>
+  select(date, traffctl, visibility, light, rdsfcond, acclass, speeding, ag_driv, alcohol, disability) |>
   tidyr::drop_na()
 
-# Rename multiple columns to understand more easily by the name
-cleaned_data <- cleaned_data |>
-  rename(
-    traffic_control_type = traffctl,
-    road_surface_condition = rdsfcond,
-    classification_of_accident = acclass,
-    aggressive_and_disturbed_driving = ag_driv
-  )
+cleaned_data <- cleaned_data %>%
+  mutate(traffctl = case_when(
+    traffctl == "No Control" ~ "No Control",
+    traffctl == "Traffic Signal" ~ "Traffic Signal",
+    TRUE ~ "Others"
+  ))
+
+# Modify visibility to group categories into 'Clear' or 'Disturbed'
+cleaned_data <- cleaned_data %>%
+  mutate(visibility = case_when(
+    visibility == "Clear" ~ "Clear",
+    TRUE ~ "Disturbed"
+  ))
+
+# Modify light to group categories into 'Dark','Daylight', and 'Dim Light'
+cleaned_data <- cleaned_data %>%
+  mutate(light = case_when(
+    light %in% c("Dark", "Dark, artificial") ~ "Dark",
+    light %in% c("Daylight", "Daylight, artificial") ~ "Daylight",
+    TRUE ~ "Dim Light"
+  ))
+
+# Modify rdsfcond to group categories into 'Dry', 'Wet', and 'Others'
+cleaned_data <- cleaned_data %>%
+  mutate(rdsfcond = case_when(
+    rdsfcond == "Dry" ~ "Dry",
+    rdsfcond == "Wet" ~ "Wet",
+    TRUE ~ "Others"
+  ))
+
+cleaned_data <- cleaned_data %>%
+  mutate(acclass = case_when(
+    acclass == "Fatal" ~ "Fatal",
+    acclass == "Non-Fatal Injury" ~ "Non-Fatal Injury",
+    TRUE ~ "None or Others"
+  ))
 
 # human factors
 human_factors_data <-
   cleaned_data |>
   janitor::clean_names() |>
-  select(date, speeding, aggressive_and_disturbed_driving, alcohol, disability) |>
+  select(date, speeding, ag_driv, alcohol, disability) |>
   tidyr::drop_na()
 
 # environmental factors
 environmental_factors_data <-
   cleaned_data |>
   janitor::clean_names() |>
-  select(date, traffic_control_type, visibility, light, road_surface_condition) |>
-  tidyr::drop_na()
-
-# result data
-result_data <-
-  cleaned_data |>
-  janitor::clean_names() |>
-  select(date, classification_of_accident, injury) |>
+  select(date, traffctl, visibility, light, rdsfcond) |>
   tidyr::drop_na()
 
 #### Save data ####
 write_csv(cleaned_data, "data/analysis_data/total_cleaned_data.csv")
 write_csv(human_factors_data, "data/analysis_data/human_factors_data.csv")
 write_csv(environmental_factors_data, "data/analysis_data/environmental_factors_data.csv")
-write_csv(result_data, "data/analysis_data/result_data.csv")
 
