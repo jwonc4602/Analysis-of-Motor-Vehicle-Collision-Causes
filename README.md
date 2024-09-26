@@ -18,4 +18,4 @@ The repo is structured as:
 
 ## Statement on LLM usage
 
-No LLMs were used for any aspect of this work.
+Aspects of this project were written with the assistance of the language model, ChatGPT. Specifically, ChatGPT was used to generate discussion points, refine the title and subtitle, and help structure key arguments. The entire chat history is available in other/llm/usage.txt.
