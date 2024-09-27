@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository analyzes motor vehicle collisions in Toronto from 2006 to 2023, focusing on how human behavior and environmental factors combine to increase accident risks. The findings identify aggressive driving and alcohol use as major contributors, even under good road conditions, and suggest targeted policy interventions.
+This repository analyzes motor vehicle collisions in Toronto from 2006 to 2023, focusing on how human behavior and environmental factors combine to increase accident risks. The findings identify aggressive driving as major contributors, even under good road conditions, and suggest targeted policy interventions.
 
 
 ## File Structure
