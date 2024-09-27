@@ -1,12 +1,12 @@
 ---
 title: "Analysis of Motor Vehicle Collision Causes in Toronto from 2006 to 2023"
-subtitle: "Assessing the Interplay of Human Behavior and Environmental Factors in Predicting Accident Severity and High-Risk Scenarios"
+subtitle: "Assessing the Interplay of Human behaviour and Environmental Factors in Predicting Accident Severity and High-Risk Scenarios"
 author: 
   - Jiwon Choi
 thanks: "Code and data are available at: https://github.com/jwonc4602/Analysis-of-Motor-Vehicle-Collision-Causes."
 date: today
 date-format: long
-abstract: "This study analyzes motor vehicle collisions in Toronto from 2006 to 2023, focusing on the interaction between human behaviors—such as speeding, aggressive driving, and alcohol use—and environmental conditions like visibility and road surfaces. The findings show that while environmental factors increase risks, aggressive driving and alcohol use are the strongest predictors of severe accidents. These results highlight the need for targeted interventions in both driver behavior and infrastructure to improve urban traffic safety."
+abstract: "This study analyzes motor vehicle collisions in Toronto from 2006 to 2023, focusing on the interaction between human behaviours—such as speeding, aggressive driving, and alcohol use—and environmental conditions like visibility and road surfaces. The findings show that while environmental factors increase risks, aggressive driving is the strongest predictors of severe accidents. These results highlight the need for targeted interventions in both driver behaviour and infrastructure to improve urban traffic safety."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -47,9 +47,9 @@ show_col_types = FALSE
 
 # Introduction
 
-Motor vehicle collisions are a leading cause of injury and fatality in urban areas, driving ongoing efforts to improve road safety. In an expanding city like Toronto, understanding the causes of traffic accidents is critical for shaping effective policies. This paper examines traffic collisions in Toronto over 17 years, focusing on how human behavior and environmental conditions influence the frequency and severity of accidents.
+Motor vehicle collisions are a leading cause of injury and fatality in urban areas, driving ongoing efforts to improve road safety. In an expanding city like Toronto, understanding the causes of traffic accidents is critical for shaping effective policies. This paper examines traffic collisions in Toronto over 17 years, focusing on how human behaviour and environmental conditions influence the frequency and severity of accidents.
 
-While much research has been done on factors such as speeding or poor road conditions, there is still a lack of understanding regarding the interaction between human behaviors and environmental conditions in creating high-risk situations. Most studies focus on these factors separately, missing how they combine to increase accident risks. This research addresses that gap by analyzing both human and environmental factors simultaneously, offering a more complete view of what leads to traffic accidents in an urban setting.
+While much research has been done on factors such as speeding or poor road conditions, there is still a lack of understanding regarding the interaction between human behaviours and environmental conditions in creating high-risk situations. Most studies focus on these factors separately, missing how they combine to increase accident risks. This research addresses that gap by analyzing both human and environmental factors simultaneously, offering a more complete view of what leads to traffic accidents in an urban setting.
 
 Using data from Toronto Police Services, this study analyzes the role of human factors like speeding, aggressive driving, alcohol use, and disability alongside environmental factors such as visibility, lighting, traffic control, and road conditions. The results show that aggressive driving and alcohol use, even under good road conditions, are major contributors to accidents. High-risk scenarios, like aggressive driving on dry roads with clear visibility, emerge as leading causes of collisions. These findings suggest that targeted actions, such as stricter enforcement against reckless driving and improved traffic controls in key areas, could help reduce accident rates.
 
@@ -94,7 +94,7 @@ ggplot(acclass_summary, aes(x = acclass, y = n, fill = acclass)) +
 
 ## Human Factors
 
-The cleaned data is split into two sets. The first focuses on human factors, particularly driver behaviors, and conditions that may have contributed to accidents. Four key categories—`speeding,` `ag_driv,` `alcohol` and `disability`—were selected due to their known impact on traffic accidents. Each is recorded as either "None" or "Yes," indicating whether that factor was present in the incident. These categories focus on preventable human actions or conditions that are strongly linked to traffic risks. (see @tbl-cleaned-human-factors-data)
+The cleaned data is split into two sets. The first focuses on human factors, particularly driver behaviours, and conditions that may have contributed to accidents. Four key categories—`speeding,` `ag_driv,` `alcohol` and `disability`—were selected due to their known impact on traffic accidents. Each is recorded as either "None" or "Yes," indicating whether that factor was present in the incident. These categories focus on preventable human actions or conditions that are strongly linked to traffic risks. (see @tbl-cleaned-human-factors-data)
 
 ```{r}
 #| message: false
@@ -111,13 +111,13 @@ head (environmental_factors_data, 5) |>
 
 1. **Speeding**: Tracks whether speeding was a factor in the collision. Speeding reduces reaction time and increases crash severity, making it a leading cause of accidents.
 
-2. **Aggressive Driving (ag_driv)**: Refers to reckless or distracted behaviors, such as texting while driving. These actions impair judgment and reaction time, significantly increasing accident risk.
+2. **Aggressive Driving (ag_driv)**: Refers to reckless or distracted behaviours, such as texting while driving. These actions impair judgment and reaction time, significantly increasing accident risk.
 
 3. **Alcohol**: Captures whether alcohol was involved in the collision. Alcohol impairs motor skills and decision-making, contributing to many severe and fatal accidents.
 
 4. **Disability**: Notes if a medical or physical disability affected the driver's ability to control the vehicle. Disabilities can impair a driver's capacity to respond to road conditions, making this a key safety factor.
 
-@fig-human-factors-frequency-distribution illustrates the frequency of human factors contributing to traffic collisions. Aggressive and disturbed driving (ag_driv) appears most frequently, with 9,836 occurrences, followed by speeding, which accounts for 2,694 cases. Alcohol use and disability are less common, with 808 and 493 incidents, respectively. Understanding these factors is important for identifying the human behaviors that increase traffic accident risks and for shaping strategies to reduce both the frequency and severity of collisions.
+@fig-human-factors-frequency-distribution illustrates the frequency of human factors contributing to traffic collisions. Aggressive and disturbed driving (ag_driv) appears most frequently, with 9,836 occurrences, followed by speeding, which accounts for 2,694 cases. Alcohol use and disability are less common, with 808 and 493 incidents, respectively. Understanding these factors is important for identifying the human behaviours that increase traffic accident risks and for shaping strategies to reduce both the frequency and severity of collisions.
 
 ```{r}
 #| message: false
@@ -162,7 +162,7 @@ ggplot(factor_summary, aes(x = factor, y = count, fill = factor)) +
 
 ## Environmental Factors
 
-The second dataset focuses on environmental factors that influence traffic collisions, including conditions such as traffic control, visibility, lighting, and road surface. These elements shape driver behavior and impact accident risk. To simplify analysis and improve consistency, categories were consolidated, providing a clearer understanding of how these factors affect accidents and where safety improvements are needed. (see @tbl-cleaned-environmental-factors-data)
+The second dataset focuses on environmental factors that influence traffic collisions, including conditions such as traffic control, visibility, lighting, and road surface. These elements shape driver behaviour and impact accident risk. To simplify analysis and improve consistency, categories were consolidated, providing a clearer understanding of how these factors affect accidents and where safety improvements are needed. (see @tbl-cleaned-environmental-factors-data)
 
 ```{r}
 #| message: false
@@ -177,7 +177,7 @@ head (environmental_factors_data, 5) |>
   )
 ```
 
-1. **Traffic Control Type (traffctl)**: This was simplified into "No Control," "Traffic Signal," and "Others." The "Others" group combines less common traffic controls like stop signs and pedestrian crossovers. This distinction highlights the impact of varying levels of traffic regulation on driver behavior, focusing on scenarios where traffic control presence may influence accident risks.
+1. **Traffic Control Type (traffctl)**: This was simplified into "No Control," "Traffic Signal," and "Others." The "Others" group combines less common traffic controls like stop signs and pedestrian crossovers. This distinction highlights the impact of varying levels of traffic regulation on driver behaviour, focusing on scenarios where traffic control presence may influence accident risks.
 
 2. **Visibility**: Conditions were grouped into "Clear" and "Disturbed," with "Disturbed" covering adverse weather such as fog, rain, and snow. This division highlights the contrast between ideal and hazardous visibility, which directly affects a driver's ability to navigate safely. Poor visibility is a known factor in accidents, making this an essential category for identifying environmental hazards.
 
@@ -280,15 +280,13 @@ second_plot_pair <- grid.arrange(plot3, plot4, ncol = 2,
 
 ## High-Risk Scenarios for Road Accidents
 
-@fig-high-risk-combinations-for-accident shows the relationship between environmental factors—traffic control, visibility, lighting, and road surface—and human behaviors like speeding, aggressive driving, alcohol use, and disability. It highlights clear patterns where certain combinations lead to higher accident rates.
+@fig-high-risk-combinations-for-accident shows the relationship between environmental factors—traffic control, visibility, lighting, and road surface—and human behaviours like speeding, aggressive driving, alcohol use, and disability. It highlights clear patterns where certain combinations lead to higher accident rates.
 
-The most dangerous combination occurs when **traffic signals are present, daylight is clear, the road is dry, and aggressive driving is involved**. Even in ideal environmental conditions, aggressive driving leads to the highest number of accidents. This suggests that behaviors like tailgating and reckless overtaking pose significant risks, even on dry roads with good visibility. To reduce accidents in such areas, stricter enforcement of speed limits and penalties for aggressive driving may be necessary.
+A fatal collision frequently occurs when traffic signals are present, clear visibility, daylight, the road is dry, and aggressive driving is involved. Even in ideal environmental conditions, aggressive driving leads to the highest number of accidents. This suggests that behaviours like tailgating and reckless overtaking pose significant risks, even on dry roads with good visibility. To reduce accidents in such areas, stricter enforcement of speed limits and penalties for aggressive driving may be necessary.
 
-Another high-risk combination is **no traffic control, clear conditions, daylight, dry roads, and aggressive driving coupled with alcohol use**. The lack of traffic control in this scenario appears to give drivers a false sense of safety, leading to reckless behavior. Installing traffic controls, like stop signs or roundabouts, in areas with high accident rates could help reduce these incidents.
+Another high-risk combination is no traffic control, clear visibility, daylight, and dry roads with no human factors involved. The lack of traffic control in this scenario appears to give drivers a false sense of safety, leading to reckless behaviour. Installing traffic controls, like stop signs or roundabouts, in areas with high accident rates could help reduce these incidents.
 
-A third combination showing increased risk involves **no traffic control, poor visibility, daylight, and wet roads**, but **no involvement of risky behaviors**. This highlights how wet roads and low visibility increase accident risks, even without human error. Improving road infrastructure, such as adding drainage systems or warning signs in areas prone to heavy rainfall, and introducing traffic controls could help prevent accidents under these conditions.
-
-The data shows that while environmental factors like wet roads and poor visibility are important, aggressive driving and alcohol use are key behaviors that amplify risk, even in favorable conditions. Focusing on improving infrastructure and stricter enforcement against aggressive driving and alcohol-related offenses could significantly lower accident rates in these high-risk scenarios.
+This shows that while environmental factors like no traffic controls, wet roads and poor visibility are important, aggressive driving is a key behaviour that amplifies risk, even in favorable conditions. Focusing on improving infrastructure and stricter enforcement against aggressive driving and alcohol-related offenses could significantly lower accident rates in these high-risk scenarios.
 
 ```{r fig.width=12, fig.height=15}
 #| message: false
@@ -369,17 +367,17 @@ ggplot(trend_data, aes(x = year, y = count, color = factor)) +
        color = "Human Factor")
 ```
 
-With advances in data-driven technologies, it's now possible to predict the severity of motor vehicle accidents by analyzing a combination of human behaviors and environmental conditions. This section focuses on how predictive models can be developed to assess the likelihood of severe accidents using factors such as speeding, alcohol use, poor road conditions, and low visibility.
+With advances in data-driven technologies, it's now possible to predict the severity of motor vehicle accidents by analyzing a combination of human behaviours and environmental conditions. This section focuses on how predictive models can be developed to assess the likelihood of severe accidents using factors such as speeding, alcohol use, poor road conditions, and low visibility.
 
-For instance, a system could gather real-time environmental data, such as weather and road surface conditions, and combine it with information on traffic behaviors, like speeding patterns, to determine if an area is at high risk for serious accidents. This type of early warning system could be integrated into navigation apps or smart cars to alert drivers to potential dangers and help prevent accidents before they occur.
+For instance, a system could gather real-time environmental data, such as weather and road surface conditions, and combine it with information on traffic behaviours, like speeding patterns, to determine if an area is at high risk for serious accidents. This type of early warning system could be integrated into navigation apps or smart cars to alert drivers to potential dangers and help prevent accidents before they occur.
 
 Predictive analytics can identify the most dangerous combinations of factors, such as speeding during rainy weather or aggressive driving in poor visibility. Machine learning algorithms could continuously improve these models by incorporating historical accident data, making the predictions more accurate over time. This approach shifts accident prevention from a reactive to a proactive strategy, which could reduce the strain on healthcare systems and improve overall road safety.
 
 ## Weaknesses and next steps
 
-One limitation of this analysis is that the dataset only includes data up to 2023. While this offers a strong historical view on traffic accidents in Toronto, it does not account for more recent shifts in road usage, traffic enforcement, or driver behavior that may have emerged after 2023. For example, new driving technologies, ride-sharing services, and updated traffic regulations could significantly influence accident rates, but these factors are not reflected in the current data. As a result, the findings may not fully align with recent trends, limiting their relevance for current and future policy decisions.
+One limitation of this analysis is that the dataset only includes observations up to 2023. While this offers a strong historical view on traffic accidents in Toronto, it does not account for more recent shifts in road usage, traffic enforcement, or driver behaviour that may have emerged after 2023. For example, new driving technologies, ride-sharing services, and updated traffic regulations could significantly influence accident rates, but these factors are not reflected in the current data. As a result, the findings may not fully align with recent trends, limiting their relevance for current and future policy decisions.
 
-A key area for future research involves the growing use of autonomous or driver-assist technologies, which are not yet covered by the dataset but could have a major impact on traffic accident patterns. As these technologies become more common, understanding their effect on traffic safety and accident severity will be essential. The lack of data on autonomous vehicles limits our ability to predict how these innovations might change accident trends. However, from the figure @fig-human-factor-trend-over-time, we see that accidents involving aggressive driving have decreased, possibly due to the rise of driver-assist features that reduce reckless behavior. Future studies should incorporate data on autonomous vehicles and their interactions with human-driven cars to better understand how these advancements affect safety. This could help develop predictive models that account for both human and automated driving behaviors, providing important understanding for policymakers and urban planners as they adapt infrastructure and safety regulations for a future where both types of vehicles share the road.
+A key area for future research involves the growing use of autonomous or driver-assist technologies, which are not yet covered by the dataset but could have a major impact on traffic accident patterns. As these technologies become more common, understanding their effect on traffic safety and accident severity will be essential. The lack of data on autonomous vehicles limits our ability to predict how these innovations might change accident trends. However, from the figure @fig-human-factor-trend-over-time, we see that accidents involving aggressive driving have decreased, possibly due to the rise of driver-assist features that reduce reckless behaviour. Future studies should incorporate data on autonomous vehicles and their interactions with human-driven cars to better understand how these advancements affect safety. This could help develop predictive models that account for both human and automated driving behaviours, providing important understanding for policymakers and urban planners as they adapt infrastructure and safety regulations for a future where both types of vehicles share the road.
 
 \newpage
 
