@@ -47,13 +47,13 @@ show_col_types = FALSE
 
 # Introduction
 
-Motor vehicle collisions are a leading cause of injury and fatality in urban areas, driving ongoing efforts to improve road safety. In an expanding city like Toronto, understanding the causes of traffic accidents is critical for shaping effective policies. This paper examines traffic collisions in Toronto over 17 years, focusing on how human behaviour and environmental conditions influence the frequency and severity of accidents.
+Motor vehicle collisions are a leading cause of injury and fatality in urban areas, driving ongoing efforts to improve road safety. In an expanding city like Toronto, understanding the causes of traffic accidents is important for shaping effective policies. This paper examines traffic collisions in Toronto over 17 years, focusing on how human behaviour and environmental conditions influence the frequency and severity of accidents.
 
 While much research has been done on factors such as speeding or poor road conditions, there is still a lack of understanding regarding the interaction between human behaviours and environmental conditions in creating high-risk situations. Most studies focus on these factors separately, missing how they combine to increase accident risks. This research addresses that gap by analyzing both human and environmental factors simultaneously, offering a more complete view of what leads to traffic accidents in an urban setting.
 
 Using data from Toronto Police Services, this study analyzes the role of human factors like speeding, aggressive driving, alcohol use, and disability alongside environmental factors such as visibility, lighting, traffic control, and road conditions. The results show that aggressive driving and alcohol use, even under good road conditions, are major contributors to accidents. High-risk scenarios, like aggressive driving on dry roads with clear visibility, emerge as leading causes of collisions. These findings suggest that targeted actions, such as stricter enforcement against reckless driving and improved traffic controls in key areas, could help reduce accident rates.
 
-The rest of the paper is organized as follows. @sec-data outlines the data and methodology and analyzes factors contributing to traffic collisions. @sec-discussion discusses the results and potential interventions. The final sections of the discussion part critically evaluate the study's limitations and propose directions for future research.
+The rest of the paper is organized as follows. @sec-data outlines the data and methodology and analyzes factors contributing to traffic collisions. @sec-discussion discusses the results and potential interventions. The final sections of the discussion part evaluate the study's limitations and propose directions for future research.
 
 # Data {#sec-data}
 
