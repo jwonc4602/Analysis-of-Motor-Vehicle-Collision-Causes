@@ -62,7 +62,7 @@ set.seed(123)  # Setting seed for reproducibility
 
 # Simulate random data for traffic control type
 traffic_control <- tibble(
-  "Control Type" = c("No Control", "Traffic Signal", "Stop Sign", "Pedestrian Crossover"),
+  "Control Type" = c("No Control", "Traffic Signal", "Others"),
   "Count" = runif(4, 20, 60)  # Random counts between 20 and 60
 )
 
@@ -78,8 +78,8 @@ print(plot3)
 
 # Simulate random data for visibility conditions
 visibility <- tibble(
-  "Condition" = c("Clear", "Snow", "Rain"),
-  "Count" = runif(3, 30, 80)  # Random counts between 30 and 80
+  "Condition" = c("Clear", "Disturbed"),
+  "Count" = runif(2, 30, 80)  # Random counts between 30 and 80
 )
 
 # Plot: Visibility conditions
@@ -94,7 +94,7 @@ print(plot4)
 
 # Simulate random data for road surface conditions
 road_surface <- tibble(
-  "Condition" = c("Dry", "Ice", "Wet"),
+  "Condition" = c("Dry", "Others", "Wet"),
   "Count" = runif(3, 30, 80)  # Random counts between 30 and 80
 )
 
@@ -107,23 +107,4 @@ plot5 <- ggplot(road_surface, aes(x = Condition, y = Count)) +
 
 # Display road surface condition plot
 print(plot5)
-
-#### Simulation 4) Injury Results ####
-set.seed(123)  # Setting seed for reproducibility
-
-# Simulate random injury results
-injury_results <- tibble(
-  "Injury Type" = c("Fatal", "Major", "Minimal", "Minor", "None"),
-  "Count" = runif(5, 500, 9000)  # Random counts between 500 and 9000
-)
-
-# Plot: Injury results
-plot6 <- ggplot(injury_results, aes(x = `Injury Type`, y = Count, fill = `Injury Type`)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Injury Type", y = "Count", title = "Injury Results") +
-  theme_minimal() +
-  geom_text(aes(label = round(Count)), vjust = -0.5)
-
-# Display injury results plot
-print(plot6)
 
